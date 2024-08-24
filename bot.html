@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Bot</title>
+
+    <style>
+        .co {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 96vh;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .wr {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .bot {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .rw {
+            display: flex;
+            align-items: center;
+        }
+
+        #jawaban {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        #jawaban:focus {
+            border-color: #007bff;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body style="background-color: black;">
+    <div class="co">
+        <div class="wr">
+            <p id="pertanyaan" class="bot"></p>
+            <div class="rw">
+                <input id="jawaban" type="text" placeholder="silahkan jawab" />
+                <button onclick="botStart()">SEND</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const pertanyaan = document.getElementById('pertanyaan');
+        const jawaban = document.getElementById('jawaban');
+
+        let init = 0;
+        const botSay = (data) => {
+            return [
+                'Perkenalkan saya Nana, siapa nama kamu?',
+                `Hallo ${data?.nama}, berapa usia kamu?`,
+                `Ouh ${data?.usia}, hobi kamu apa ya?`,
+                `Wah sama, aku juga hobi ${data?.hobi}. Makanan kesukaanmu apa?`,
+                `Wahh sama, aku juga suka ${data?.makanan}. Btw kamu punya pacar gak?`,
+                `Ouh ${data?.pacar}, ya udah kalau gitu, cuman nanya. Udahan yah?`,
+            ];
+        };
+
+        pertanyaan.innerHTML = botSay()[0];
+
+        let usersData = [];
+
+        jawaban.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                botStart();
+            }
+        });
+
+        function botStart() {
+            init++;
+            if (init === 1) {
+                botDelay({ nama: jawaban.value });
+            } else if (init === 2) {
+                botDelay({ usia: jawaban.value });
+            } else if (init === 3) {
+                botDelay({ hobi: jawaban.value });
+            } else if (init === 4) {
+                botDelay({ makanan: jawaban.value });
+            } else if (init === 5) {
+                botDelay({ pacar: jawaban.value });
+            } else if (init === 6) {
+                finishing();
+            } else {
+                botEnd();
+            }
+        }
+
+        function finishing() {
+            pertanyaan.innerHTML = `Terima kasih sudah mampir ${usersData[0]} &#128514; keren kan wkwkwk, kapan-kapan kita main ${usersData[2]} bareng ya`;
+            jawaban.value = 'jelas wkwkw';
+        }
+
+        function botEnd() {
+            window.location.reload();
+        }
+
+        function botDelay(jawabanUser) {
+            console.log({ usersData: usersData });
+            setTimeout(() => {
+                pertanyaan.innerHTML = botSay(jawabanUser)[init];
+            }, 1000);
+
+            usersData.push(jawaban.value);
+            jawaban.value = '';
+        }
+    </script>
+</body>
+</html>
